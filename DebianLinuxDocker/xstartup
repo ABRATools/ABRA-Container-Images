@@ -1,0 +1,16 @@
+#!/bin/bash
+export XKL_XMODMAP_DISABLE=1
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+unset SESSION_MANAGER
+#export XDG_SESSION_TYPE=x11
+
+[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+
+xhost +localhost
+
+xsetroot -solid green
+
+cd $HOME
+
+dbus-launch --exit-with-session startxfce4
