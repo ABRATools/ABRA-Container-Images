@@ -13,7 +13,7 @@ RUN apt install -y \
     tar sudo dbus-x11 dbus net-tools gnu-which \
     libwebsockets-dev build-essential cmake git \
     libjson-c-dev xfce4 xfce4-terminal xfce4-goodies xterm \
-    tigervnc-standalone-server tigervnc-xorg-extension \
+    tigervnc-standalone-server tigervnc-xorg-extension snmpd \
     && apt clean
 
 # setup xstartup for xfce4
@@ -24,6 +24,9 @@ RUN chmod 0755 /usr/local/vnc/xstartup
 # copy service files
 COPY ./*.service /etc/systemd/system/
 RUN chmod 0644 /etc/systemd/system/*.service
+
+# copy snmpd.conf
+COPY ./snmpd.conf /etc/snmp/snmpd.conf
 
 # install novnc
 RUN wget https://github.com/novnc/noVNC/archive/refs/tags/v1.5.0.tar.gz -O /tmp/novnc.tar.gz && \
@@ -47,10 +50,11 @@ RUN wget https://github.com/tsl0922/ttyd/releases/download/1.7.7/ttyd.x86_64 -O 
 RUN systemctl enable dbus && \
     systemctl enable tigervnc@root.service && \
     systemctl enable novnc-websockify@root.service && \
-    systemctl enable ttyd@root.service
+    systemctl enable ttyd@root.service && \
+    systemctl enable snmpd
 
-# port 8888 = novnc, port 7681 = ttyd
-EXPOSE 5801 7681
+# port 8888 = novnc, port 7681 = ttyd websocket, port 161 = snmpd
+EXPOSE 5801 7681 161/udp
 
 # Start systemd
 CMD ["/sbin/init"]
