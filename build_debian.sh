@@ -1,2 +1,2 @@
 #!/bin/bash
-podman build -t podman-debian DebianLinuxDocker/
+podman build -t podman-debian DebianLinuxPodman/
