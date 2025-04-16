@@ -1,0 +1,10 @@
+[Unit]
+Description=Starts eBPF user command tracking service
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /srv/usercommands.py
+
+[Install]
+WantedBy=multi-user.target
