@@ -36,14 +36,10 @@ int printCommands(struct pt_regs *ctx){
 b=BPF(text=bpf_text)
 b.attach_uretprobe(name="/bin/bash",sym="readline",fn_name="printCommands")
 
-print("%-6s %-16s %-32s" % ("PID", "COMM", "COMMAND"))
-
-#log=open("/var/log/abra/node.log","ab")
-#log=open("/var/log/ebpf/usercommand.log","ab")
+print("%-6s %-16s %-64s" % ("PID", "COMM", "COMMAND"))
 
 def print_event(cpu,data,size):
   event=b["events"].event(data)
-  #printb(b"%-6d %-16s %-32s" % (event.pid,event.comm,event.command))
   with open("/var/log/ebpf/usercommand.log","ab") as f:
     f.write(b"%-12d %-6d %-16s %-32s\n" % (event.ts,event.pid,event.comm,event.command))
 

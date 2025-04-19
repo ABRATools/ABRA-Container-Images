@@ -63,13 +63,19 @@ RUN useradd -m -s /bin/bash user && \
 # set password for root
 RUN echo "root:abratools" | chpasswd
 
+#create /var/log/ebpf directory
+RUN mkdir -p /var/log/ebpf && \
+    chown root:root /var/log/ebpf && \
+    chmod 755 /var/log/ebpf
+
 # Not enabling eBPF services by default
 # Enable and start the services
 RUN systemctl enable dbus && \
     systemctl enable tigervnc@root.service && \
     systemctl enable novnc-websockify@root.service && \
     systemctl enable ttyd@root.service && \
-    systemctl enable rsyslog
+    systemctl enable rsyslog && \
+    systemctl enable ebpf_usercommands.service
 
 # port 8888 = novnc, port 7681 = ttyd websocket
 EXPOSE 5801 7681
