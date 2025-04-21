@@ -1,7 +1,0 @@
-novnc: autoconnection, resize, quality, compression
-
-http://NODE_IP:NODE_WEB_PORT/CONTAINER_NAME/novnc/vnc.html?path=/CONTAINER_NAME/novnc/websockify&autoconnect=true&resize=remote&quality=1&compression=10
-
-ttyd:
-
-http://NODE_IP:NODE_WEB_PORT/CONTAINER_NAME/ttyd/

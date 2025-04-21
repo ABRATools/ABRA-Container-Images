@@ -68,6 +68,11 @@ RUN mkdir -p /var/log/ebpf && \
     chown root:root /var/log/ebpf && \
     chmod 755 /var/log/ebpf
 
+# touch usercommands.log file
+RUN touch /var/log/ebpf/usercommands.log && \
+    chown root:root /var/log/ebpf/usercommands.log && \
+    chmod 775 /var/log/ebpf/usercommands.log
+
 # Not enabling eBPF services by default
 # Enable and start the services
 RUN systemctl enable dbus && \

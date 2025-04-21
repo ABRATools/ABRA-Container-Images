@@ -14,21 +14,20 @@ RUN apt install -y \
     libwebsockets-dev build-essential cmake git \
     libjson-c-dev xfce4 xfce4-terminal xfce4-goodies xterm \
     tigervnc-standalone-server tigervnc-xorg-extension rsyslog \
-    bpfcc-tools libbpfcc libbpfcc-dev \
     && apt clean
 
 # setup xstartup for xfce4
 RUN mkdir -p /usr/local/vnc
-COPY DebianLinuxPodman/xstartup /usr/local/vnc/xstartup
+COPY ./xstartup /usr/local/vnc/xstartup
 RUN chmod 0755 /usr/local/vnc/xstartup
 
 # copy service files
-COPY DebianLinuxPodman/*.service /etc/systemd/system/
+COPY ./*.service /etc/systemd/system/
 RUN chmod 0644 /etc/systemd/system/*.service
 
 # copy rsyslog config files
-COPY DebianLinuxPodman/rsyslog.conf /etc/rsyslog.conf
-COPY DebianLinuxPodman/*.conf /etc/rsyslog.d/
+COPY ./rsyslog.conf /etc/rsyslog.conf
+COPY ./*.conf /etc/rsyslog.d/
 
 # install novnc
 RUN wget https://github.com/novnc/noVNC/archive/refs/tags/v1.5.0.tar.gz -O /tmp/novnc.tar.gz && \
@@ -47,14 +46,6 @@ RUN wget https://github.com/novnc/websockify/archive/refs/tags/v0.12.0.tar.gz -O
 # install ttyd
 RUN wget https://github.com/tsl0922/ttyd/releases/download/1.7.7/ttyd.x86_64 -O /usr/local/bin/ttyd && \
     chmod +x /usr/local/bin/ttyd
-
-# install ebpf scripts
-RUN echo "none /sys/kernel/debug debugfs auto,rw,seclabel,relatime 0 0" >> /etc/fstab
-COPY ./ebpf/python/usercommands.py /srv/usercommands.py
-
-# adds ebpf log rotate
-COPY DebianLinuxPodman/abra /etc/logrotate.d/abra
-
 
 # Enable and start the services
 RUN systemctl enable dbus && \
