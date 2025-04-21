@@ -4,7 +4,7 @@ Description=ttyd Terminal for %i
 
 [Service]
 User=%i
-ExecStart=/usr/local/bin/ttyd -p 7681 --writable --interface 0.0.0.0 -t enableZmodem=true -t enableTrzsz=true -t fontSize=20 -w /home/%i bash
+ExecStart=/usr/local/bin/ttyd -p 7681 --writable --interface 0.0.0.0 -t enableZmodem=true -t enableTrzsz=true -t fontSize=20 -w /home/%i sh
 Restart=always
 
 [Install]
