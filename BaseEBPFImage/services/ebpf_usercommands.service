@@ -4,6 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
+ExecStartPre=bash -c "mkdir -p /var/log/ebpf"
 ExecStart=/usr/bin/python3 /srv/usercommands.py
 
 [Install]
