@@ -1,0 +1,13 @@
+[Unit]
+Description=Starts eBPF IP tracking and geolocation
+ConditionPathExists=/srv/ip_geolocation.py
+ConditionPathExists=/usr/local/share/GeoLite2-City.mmdb
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStartPre=bash -c "touch /var/log/ebpf/ip_geolocation.log"
+ExecStart=/usr/bin/python3 /srv/ip_geolocation.py
+
+[Install]
+WantedBy=multi-user.target

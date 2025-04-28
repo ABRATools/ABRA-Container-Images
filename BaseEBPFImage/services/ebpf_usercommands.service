@@ -1,9 +1,11 @@
 [Unit]
 Description=Starts eBPF user command tracking service
+ConditionPathExists=/srv/usercommands.py
 After=multi-user.target
 
 [Service]
 Type=simple
+ExecStartPre=bash -c "touch /var/log/ebpf/usercommand.log"
 ExecStart=/usr/bin/python3 /srv/usercommands.py
 
 [Install]

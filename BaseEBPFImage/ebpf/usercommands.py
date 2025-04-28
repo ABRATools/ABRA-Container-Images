@@ -4,6 +4,7 @@
 from bcc import BPF
 from time import sleep
 from bcc.utils import printb
+import signal
 
 bpf_text="""
 #include <linux/sched.h>
@@ -36,12 +37,19 @@ int printCommands(struct pt_regs *ctx){
 b=BPF(text=bpf_text)
 b.attach_uretprobe(name="/bin/bash",sym="readline",fn_name="printCommands")
 
+def handle_sigterm(signum, frame):
+  print("Termination signal received. Cleaning up...")
+  exit(0)
+
+signal.signal(signal.SIGTERM, handle_sigterm)
+signal.signal(signal.SIGKILL, handle_sigterm)
+
 print("%-6s %-16s %-64s" % ("PID", "COMM", "COMMAND"))
 
 def print_event(cpu,data,size):
   event=b["events"].event(data)
-  with open("/var/log/ebpf/usercommand.log","ab") as f:
-    f.write(b"%-12d %-6d %-16s %-32s\n" % (event.ts,event.pid,event.comm,event.command))
+  with open("/var/log/ebpf/usercommand.log","a+b") as f:
+    f.write(b"%-12d %-6d %-16s %s\n" % (event.ts,event.pid,event.comm,event.command))
 
 b[b"events"].open_perf_buffer(print_event)
 while(1):
