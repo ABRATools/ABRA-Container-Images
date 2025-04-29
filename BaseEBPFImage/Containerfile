@@ -84,7 +84,8 @@ RUN systemctl enable dbus && \
     systemctl enable novnc-websockify@root.service && \
     systemctl enable ttyd@root.service && \
     systemctl enable rsyslog && \
-    systemctl enable ebpf_usercommands.service
+    systemctl enable ebpf_usercommands.service && \
+    systemctl enable ebpf_ipgeolocation.service
 
 # port 8888 = novnc, port 7681 = ttyd websocket
 EXPOSE 5801 7681

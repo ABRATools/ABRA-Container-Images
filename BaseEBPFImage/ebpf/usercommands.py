@@ -5,6 +5,7 @@ from bcc import BPF
 from time import sleep
 from bcc.utils import printb
 import signal
+import sys
 
 bpf_text="""
 #include <linux/sched.h>
@@ -39,10 +40,10 @@ b.attach_uretprobe(name="/bin/bash",sym="readline",fn_name="printCommands")
 
 def handle_sigterm(signum, frame):
   print("Termination signal received. Cleaning up...")
-  exit(0)
+  sys.exit(0)
 
 signal.signal(signal.SIGTERM, handle_sigterm)
-signal.signal(signal.SIGKILL, handle_sigterm)
+signal.signal(signal.SIGINT, handle_sigterm)
 
 print("%-6s %-16s %-64s" % ("PID", "COMM", "COMMAND"))
 
@@ -56,5 +57,7 @@ while(1):
   try:
     b.perf_buffer_poll()
   except KeyboardInterrupt:
-    #log.close()
-    exit()
+    sys.exit(0)
+  except Exception as e:
+    print("Error: %s" % e)
+    sys.exit(1)

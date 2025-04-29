@@ -5,7 +5,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStartPre=bash -c "touch /var/log/ebpf/usercommand.log"
+ExecStartPre=bash -c "mkdir -p /var/log/ebpf && touch /var/log/ebpf/usercommand.log"
 ExecStart=/usr/bin/python3 /srv/usercommands.py
 
 [Install]
